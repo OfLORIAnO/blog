@@ -1,0 +1,5 @@
+/frontend/.idea
+/frontend/node_modules
+/backend/node_modules
+/backend/data.js
+reference.txt
