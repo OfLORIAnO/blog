@@ -11,7 +11,10 @@ export const login = async (req, res) => {
                 message: 'Пользователь не найден',
             });
         }
-        const isValidPassword = await bcrypt.compare(req.body.password, user._doc.passwordHash);
+        const isValidPassword = await bcrypt.compare(
+            req.body.password,
+            user._doc.passwordHash
+        );
         if (!isValidPassword) {
             return res.status(400).json({
                 message: 'Неверный логин или пароль',
@@ -69,10 +72,8 @@ export const getMe = async (req, res) => {
         }
         const { passwordHash, ...userData } = user._doc;
 
-        res.json(userData);
-
         res.status(200).json({
-            success: true,
+            userData,
         });
     } catch (err) {
         console.log(err);

@@ -1,5 +1,6 @@
 import PostModel from '../models/Post.js';
-
+import UserModel from '../models/User.js';
+import mongoose from 'mongoose';
 export const getLastTags = async (req, res) => {
     try {
         const posts = await PostModel.find().limit(5).exec();
@@ -53,6 +54,37 @@ export const getOne = async (req, res) => {
         });
     }
 };
+
+export const getProfilePosts = async (req, res) => {
+    const userId = req.params.id;
+    try {
+        let isValid = mongoose.Types.ObjectId.isValid('5c0a7922c9d89830f4911426');
+        if (!isValid) {
+            return res.status(404).json({
+                message: 'Статья не найдена',
+            });
+        }
+        const posts = await PostModel.find({
+            user: userId,
+        });
+
+        const user = await UserModel.findById(userId);
+
+        if (!user) {
+            return res.status(404).json({
+                message: 'Пользователь не найден',
+            });
+        }
+
+        res.status(200).json({ posts, user });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            message: 'Не удалось получить статьи',
+        });
+    }
+};
+
 export const remove = async (req, res) => {
     try {
         const postId = req.params.id;

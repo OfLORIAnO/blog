@@ -4,7 +4,11 @@ import mongoose from 'mongoose';
 import cors from 'cors';
 import { mongoDbLink } from './data.js';
 
-import { registerValidation, loginValidation, postCreateValidation } from './validations.js';
+import {
+    registerValidation,
+    loginValidation,
+    postCreateValidation,
+} from './validations.js';
 
 import { checkAuth, handleValitaionErrors } from './utils/index.js';
 
@@ -47,15 +51,34 @@ app.post('/upload', checkAuth, upload.single('image'), (req, res) => {
 });
 
 app.post('/auth/login', loginValidation, handleValitaionErrors, UserController.login);
-app.post('/auth/register', registerValidation, handleValitaionErrors, UserController.register);
+app.post(
+    '/auth/register',
+    registerValidation,
+    handleValitaionErrors,
+    UserController.register
+);
 app.get('/auth/me', checkAuth, UserController.getMe);
 
 app.get('/tags', checkAuth, PostController.getLastTags);
-app.get('/posts', checkAuth, PostController.getAll);
-app.get('/posts/:id', checkAuth, PostController.getOne);
-app.post('/posts', checkAuth, postCreateValidation, handleValitaionErrors, PostController.create);
+app.get('/posts', PostController.getAll);
+app.get('/post/:id', PostController.getOne);
+app.post(
+    '/posts',
+    checkAuth,
+    postCreateValidation,
+    handleValitaionErrors,
+    PostController.create
+);
 app.delete('/posts/:id', checkAuth, PostController.remove);
-app.patch('/posts/:id', checkAuth, postCreateValidation, handleValitaionErrors, PostController.update);
+app.patch(
+    '/posts/:id',
+    checkAuth,
+    postCreateValidation,
+    handleValitaionErrors,
+    PostController.update
+);
+
+app.get('/profile/:id', handleValitaionErrors, PostController.getProfilePosts);
 
 app.listen(4444, (err) => {
     if (err) {
