@@ -2,7 +2,9 @@ import express from 'express';
 import multer from 'multer';
 import mongoose from 'mongoose';
 import cors from 'cors';
-import { mongoDbLink } from './data.js';
+
+import dotenv from 'dotenv';
+dotenv.config();
 
 import {
     registerValidation,
@@ -15,7 +17,7 @@ import { checkAuth, handleValitaionErrors } from './utils/index.js';
 import { UserController, PostController } from './controllers/index.js';
 
 mongoose
-    .connect(mongoDbLink)
+    .connect(process.env.MONGO_URL)
     .then(() => {
         console.log('DB ok');
     })
@@ -80,7 +82,7 @@ app.patch(
 
 app.get('/profile/:id', handleValitaionErrors, PostController.getProfilePosts);
 
-app.listen(4444, (err) => {
+app.listen(process.env.PORT, (err) => {
     if (err) {
         return console.log(err);
     }
